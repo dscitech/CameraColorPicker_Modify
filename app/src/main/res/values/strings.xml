@@ -2,7 +2,9 @@
 <resources>
 
     <!-- General -->
-    <string name="app_name">Camera Color Picker</string>
+    <string name="app_name">相机拾色器</string>
+    <string name="confirm_operation" translatable="false">操作确认</string>
+    <string name="confirm_delete_operation" translatable="false">您确认清空所有取色值吗？如需取消请点击对话框外空白处。</string>
     <string name="contact_us_email" translatable="false">tvbarthel@gmail.com</string>
     <string name="contact_us_uri" translatable="false">mailto:%1$s?subject=%2$s</string>
     <string name="contact_us_default_subject">[Camera Color Picker] Suggestion</string>
@@ -10,8 +12,8 @@
     <!-- Main activity -->
     <string name="activity_main_error_not_enough_colors">You need at least 2 colors to create a palette.</string>
     <string name="activity_main_error_limit_detect" translatable="false">取色数量超出限制（5个）</string>
-    <string name="activity_main_view_pager_title_color">Color</string>
-    <string name="activity_main_view_pager_title_palette">Palette</string>
+    <string name="activity_main_view_pager_title_color" translatable="false">色彩</string>
+    <string name="activity_main_view_pager_title_palette" translatable="false">色彩管理</string>
     <string name="activity_main_view_pager_title_unknown">Unknown</string>
 
     <!-- Color picker activity -->
@@ -68,6 +70,6 @@
     <string name="view_color_item_list_page_empty_view">You have no colors :(\n\nCapture a color with the button on the bottom right.</string>
 
     <!-- View palette list page -->
-    <string name="view_palette_list_page_empty_view">You have no palettes :(\n\nCreate a palette with the button on the bottom right.</string>
+    <string name="view_palette_list_page_empty_view" translatable="false">色彩管理页面</string>
 
 </resources>

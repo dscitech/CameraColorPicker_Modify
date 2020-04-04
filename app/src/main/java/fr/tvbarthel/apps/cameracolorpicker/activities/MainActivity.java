@@ -23,6 +23,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
@@ -35,6 +36,7 @@ import java.lang.annotation.RetentionPolicy;
 import cameracolorpicker.flavors.MainActivityFlavor;
 import fr.tvbarthel.apps.cameracolorpicker.R;
 import fr.tvbarthel.apps.cameracolorpicker.adapters.MainPagerAdapter;
+import fr.tvbarthel.apps.cameracolorpicker.data.ColorItem;
 import fr.tvbarthel.apps.cameracolorpicker.data.ColorItems;
 import fr.tvbarthel.apps.cameracolorpicker.fragments.AboutDialogFragment;
 import fr.tvbarthel.apps.cameracolorpicker.views.ColorItemListPage;
@@ -62,6 +64,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * The id associated with the palette list page.
      */
     private static final int PAGE_ID_PALETTE_LIST = 2;
+
+    private WebView webViewContainer;
 
     /**
      * A reference to the current {@link android.widget.Toast}.
@@ -144,6 +148,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mTabs.setOnPageChangeListener(this);
 
         mMainActivityFlavor = new MainActivityFlavor(this);
+        webViewContainer = (WebView) findViewById(R.id.wb_component);
+        //webViewContainer.loadUrl("http://www.qq.com");
     }
 
     @Override
@@ -226,6 +232,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         startActivity(intentColorPickerActivity);
                     }
                 } else if (mCurrentPageId == PAGE_ID_PALETTE_LIST) {
+                    new AlertDialog.Builder(MainActivity.this).setTitle(R.string.confirm_operation).setMessage(R.string.confirm_delete_operation).setPositiveButton("删除", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            for (int j = ColorItems.getSavedColorItems(MainActivity.this).size(); j > 0; j--) {
+                                ColorItems.deleteColorItem(MainActivity.this, ColorItems.getSavedColorItems(MainActivity.this).get(j - 1));
+                            }
+                            Intent intent = getIntent();
+                            finish();
+                            startActivity(intent);
+                        }
+                    }).setOnCancelListener(new DialogInterface.OnCancelListener() {
+                        @Override
+                        public void onCancel(DialogInterface dialogInterface) {
+                            Intent intent = getIntent();
+                            finish();
+                            startActivity(intent);
+                        }
+                    }).show();
+                    /*
                     // Check if there is at least two color items.
                     // Creating a color palette with 1 or 0 colors make no sense.
                     if (ColorItems.getSavedColorItems(this).size() <= 1) {
@@ -235,6 +260,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         final Intent intentColorPaletteActivity = new Intent(this, PaletteCreationActivity.class);
                         startActivity(intentColorPaletteActivity);
                     }
+                    */
                 }
                 break;
 

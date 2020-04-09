@@ -8,6 +8,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.webkit.WebView;
 import android.widget.TextView;
 
 import fr.tvbarthel.apps.cameracolorpicker.R;
@@ -17,6 +18,8 @@ import fr.tvbarthel.apps.cameracolorpicker.utils.Versions;
  * A simple {@link android.support.v4.app.DialogFragment} for displaying some information about this application.
  */
 public class AboutDialogFragment extends DialogFragment {
+
+    private static final String URL_LICENSES = "file:///android_asset/licenses.html";
 
     /**
      * Create a new instance of {@link fr.tvbarthel.apps.cameracolorpicker.fragments.AboutDialogFragment}.
@@ -42,10 +45,8 @@ public class AboutDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         final Activity activity = getActivity();
         final View dialogView = LayoutInflater.from(activity).inflate(R.layout.fragment_dialog_about, null);
-
-        ((TextView) dialogView.findViewById(R.id.fragment_dialog_about_version_name))
-                .setText(getString(R.string.fragment_dialog_about_version_name,
-                        Versions.getVersionName(activity)));
+        final WebView webView = (WebView) dialogView.findViewById(R.id.wb_component);
+        webView.loadUrl(URL_LICENSES);
 
         final AlertDialog.Builder builder = new AlertDialog.Builder(activity)
                 .setView(dialogView)

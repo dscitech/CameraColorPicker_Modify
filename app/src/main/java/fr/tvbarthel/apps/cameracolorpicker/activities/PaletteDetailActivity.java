@@ -378,7 +378,8 @@ public class PaletteDetailActivity extends AppCompatActivity implements DeletePa
                 canvas.drawRect(rectF, paint);
                 rectF.left = rectF.right;
                 rectF.right += itemSize;
-                stringBuilder.append(colorItem.getHexString(false)).append("\n");
+                stringBuilder.append(colorItem.getHexString())
+                        .append("\n");
             }
 
             // Compress the bitmap before saving and sharing.

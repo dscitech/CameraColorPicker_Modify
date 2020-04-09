@@ -172,7 +172,7 @@ public class ColorDetailActivity extends AppCompatActivity implements DeleteColo
         if (!TextUtils.isEmpty(mColorItem.getName())) {
             setTitle(mColorItem.getName());
         } else {
-            setTitle(mColorItem.getHexString(false));
+            setTitle(mColorItem.getHexString());
         }
 
         shadowInset = getResources().getDimensionPixelSize(R.dimen.row_color_item_preview_size_shadow_size);
@@ -298,7 +298,7 @@ public class ColorDetailActivity extends AppCompatActivity implements DeleteColo
                     R.string.activity_color_detail_edit_text_dialog_fragment_title,
                     R.string.activity_color_detail_edit_text_dialog_fragment_positive_button,
                     android.R.string.cancel,
-                    mColorItem.getHexString(false),
+                    mColorItem.getHexString(),
                     mColorItem.getName(), true).show(getSupportFragmentManager(), null);
         }
 
@@ -317,7 +317,7 @@ public class ColorDetailActivity extends AppCompatActivity implements DeleteColo
         if (requestCode == REQUEST_CODE_EDIT_COLOR_ITEM_NAME) {
             // Update the title of the activity.
             if (TextUtils.isEmpty(text)) {
-                setTitle(mColorItem.getHexString(false));
+                setTitle(mColorItem.getHexString());
             } else {
                 setTitle(text);
             }
@@ -387,7 +387,7 @@ public class ColorDetailActivity extends AppCompatActivity implements DeleteColo
                 // Send an intent to share the image.
                 final Intent intent = new Intent(Intent.ACTION_SEND);
                 intent.putExtra(Intent.EXTRA_STREAM, contentUri);
-                intent.putExtra(Intent.EXTRA_TEXT, mColorItem.getHexString(false) + "\n"
+                intent.putExtra(Intent.EXTRA_TEXT, mColorItem.getHexString() + "\n"
                         + mColorItem.getRgbString() + "\n" + mColorItem.getHsvString());
                 intent.setType("image/jpeg");
                 intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);

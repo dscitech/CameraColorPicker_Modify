@@ -2,18 +2,16 @@
 <resources>
 
     <!-- General -->
-    <string name="app_name">相机拾色器</string>
-    <string name="confirm_operation" translatable="false">操作确认</string>
-    <string name="confirm_delete_operation" translatable="false">您确认清空所有取色值吗？如需取消请点击对话框外空白处。</string>
-    <string name="contact_us_email" translatable="false">tvbarthel@gmail.com</string>
-    <string name="contact_us_uri" translatable="false">mailto:%1$s?subject=%2$s</string>
+    <string name="app_name">相机拾色仪</string>
+    <string name="contact_us_email">tvbarthel@gmail.com</string>
+    <string name="contact_us_uri">mailto:%1$s?subject=%2$s</string>
     <string name="contact_us_default_subject">[Camera Color Picker] Suggestion</string>
+    <string name="cancel_operation_text">取消操作</string>
+    <string name="confirm_operation_text">确认重写操作</string>
+    <string name="operation_successfully">操作成功结束</string>
 
     <!-- Main activity -->
     <string name="activity_main_error_not_enough_colors">You need at least 2 colors to create a palette.</string>
-    <string name="activity_main_error_limit_detect" translatable="false">取色数量超出限制（5个）</string>
-    <string name="activity_main_view_pager_title_color" translatable="false">色彩</string>
-    <string name="activity_main_view_pager_title_palette" translatable="false">色彩管理</string>
     <string name="activity_main_view_pager_title_unknown">Unknown</string>
 
     <!-- Color picker activity -->
@@ -39,13 +37,11 @@
 
     <!-- About dialog fragment -->
     <string name="fragment_dialog_about_version_name">Version %1$s</string>
-    <string name="fragment_dialog_about_message">Camera Color Picker is a free and open source Android app that lets you capture the colors around you using the camera of your device.</string>
-    <string name="fragment_dialog_about_made_by">Made in France with love by tbarthel &amp; vbarthel.</string>
 
     <!-- Main menu -->
-    <string name="menu_main_action_contact_us">Contact us</string>
-    <string name="menu_main_action_licenses">Content &amp; Licenses</string>
-    <string name="menu_main_action_about">About</string>
+    <string name="menu_main_action_contact_us">清空所有取色样本</string>
+    <string name="menu_main_action_licenses">录入基准系数</string>
+    <string name="menu_main_action_about">绘制曲线</string>
 
     <!-- Color detail menu -->
     <string name="menu_color_detail_action_share">Share</string>
@@ -70,6 +66,14 @@
     <string name="view_color_item_list_page_empty_view">You have no colors :(\n\nCapture a color with the button on the bottom right.</string>
 
     <!-- View palette list page -->
-    <string name="view_palette_list_page_empty_view" translatable="false">色彩管理页面</string>
+    <string name="view_palette_list_page_empty_view">You have no palettes :(\n\nCreate a palette with the button on the bottom right.</string>
+    <string name="no_permission">请基于权限。</string>
+    <string name="require_permission_title">需要相应权限</string>
+    <string name="require_permission_description">APP需要获取您的视频捕捉设备（前/后置摄像头及闪光灯）访问权限，方可继续使用。</string>
+    <string name="permission_not_granted">您没有授权，程序无法继续执行！</string>
+    <string name="activity_main_view_pager_title_palette">调色板</string>
+    <string name="activity_main_view_pager_title_color">取色仪</string>
+    <string name="picker_finish_title">取色已完成</string>
+    <string name="activity_main_error_limit_detect">取色已经结束（总数5个），点击右上角菜单可生成曲线。</string>
 
 </resources>

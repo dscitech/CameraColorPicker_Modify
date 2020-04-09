@@ -138,7 +138,7 @@ class ColorItemAdapter extends RecyclerView.Adapter<ColorItemAdapter.ColorItemHo
             if (!TextUtils.isEmpty(colorItem.getName())) {
                 mColorText.setText(colorItem.getName());
             } else {
-                mColorText.setText(colorItem.getHexString(false));
+                mColorText.setText(colorItem.getHexString());
             }
         }
 

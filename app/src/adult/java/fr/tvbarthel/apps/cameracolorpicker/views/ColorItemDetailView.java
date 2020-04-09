@@ -75,7 +75,7 @@ public class ColorItemDetailView extends LinearLayout implements View.OnClickLis
      * @param colorItem the {@link ColorItem}.
      */
     public void setColorItem(ColorItem colorItem) {
-        mHex.setText(colorItem.getHexString(false));
+        mHex.setText(colorItem.getHexString());
         mRgb.setText(colorItem.getRgbString());
         mHsv.setText(colorItem.getHsvString());
     }

@@ -3,8 +3,7 @@ package fr.tvbarthel.apps.cameracolorpicker.activities;
 import android.Manifest;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
-import android.app.Activity;
-import android.content.Context;
+import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -15,7 +14,6 @@ import android.support.annotation.StringRes;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -23,7 +21,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebView;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
@@ -36,12 +34,11 @@ import java.lang.annotation.RetentionPolicy;
 import cameracolorpicker.flavors.MainActivityFlavor;
 import fr.tvbarthel.apps.cameracolorpicker.R;
 import fr.tvbarthel.apps.cameracolorpicker.adapters.MainPagerAdapter;
-import fr.tvbarthel.apps.cameracolorpicker.data.ColorItem;
 import fr.tvbarthel.apps.cameracolorpicker.data.ColorItems;
 import fr.tvbarthel.apps.cameracolorpicker.fragments.AboutDialogFragment;
 import fr.tvbarthel.apps.cameracolorpicker.views.ColorItemListPage;
 import fr.tvbarthel.apps.cameracolorpicker.views.PaletteListPage;
-
+import fr.tvbarthel.apps.cameracolorpicker.utils.FileSystemController;
 
 /**
  * An {@link android.support.v7.app.AppCompatActivity} that shows the list of the colors that the user saved.
@@ -64,8 +61,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * The id associated with the palette list page.
      */
     private static final int PAGE_ID_PALETTE_LIST = 2;
-
-    private WebView webViewContainer;
 
     /**
      * A reference to the current {@link android.widget.Toast}.
@@ -122,10 +117,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(MainActivity.this, new String[]{
-                    Manifest.permission.CAMERA
-            }, 1);
+        if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            new AlertDialog.Builder(MainActivity.this).setTitle(R.string.require_permission_title).setMessage(R.string.require_permission_description).setPositiveButton("好", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    ActivityCompat.requestPermissions(MainActivity.this, new String[]{
+                            Manifest.permission.CAMERA,
+                            Manifest.permission.READ_EXTERNAL_STORAGE,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE
+                    }, 1);
+                }
+            }).setOnCancelListener(new DialogInterface.OnCancelListener() {
+                @Override
+                public void onCancel(DialogInterface dialogInterface) {
+                    new AlertDialog.Builder(MainActivity.this).setTitle(R.string.require_permission_title).setMessage(R.string.permission_not_granted).setOnCancelListener(new DialogInterface.OnCancelListener() {
+                        @Override
+                        public void onCancel(DialogInterface dialogInterface) {
+                            finish();
+                        }
+                    }).show();
+                }
+            }).show();
         }
         mToolbar = (Toolbar) findViewById(R.id.activity_main_toolbar);
         mToolbar.setTitle(R.string.app_name);
@@ -148,8 +160,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mTabs.setOnPageChangeListener(this);
 
         mMainActivityFlavor = new MainActivityFlavor(this);
-        webViewContainer = (WebView) findViewById(R.id.wb_component);
-        //webViewContainer.loadUrl("http://www.qq.com");
     }
 
     @Override
@@ -184,8 +194,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (itemId) {
             case R.id.menu_main_action_licenses:
                 handled = true;
-                final Intent intent = new Intent(this, LicenseActivity.class);
-                startActivity(intent);
+                final EditText inputServer = new EditText(this);
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+                alertDialogBuilder.setTitle(R.string.menu_main_action_licenses).setView(inputServer).setNegativeButton(getString(R.string.cancel_operation_text), null);
+                alertDialogBuilder.setPositiveButton(getString(R.string.confirm_operation_text), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        String inputName = inputServer.getText().toString();
+                        FileSystemController fileSystemController = new FileSystemController();
+                        fileSystemController.openFileByWrite(MainActivity.this.getFilesDir() + "/common.txt", inputName);
+                        showToast(R.string.operation_successfully);
+                    }
+                });
+                alertDialogBuilder.show();
                 break;
 
             case R.id.menu_main_action_about:
@@ -195,13 +215,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             case R.id.menu_main_action_contact_us:
                 handled = true;
-                final String uriString = getString(R.string.contact_us_uri,
-                        Uri.encode(getString(R.string.contact_us_email)),
-                        Uri.encode(getString(R.string.contact_us_default_subject)));
-                final Uri mailToUri = Uri.parse(uriString);
-                final Intent sendToIntent = new Intent(Intent.ACTION_SENDTO);
-                sendToIntent.setData(mailToUri);
-                startActivity(sendToIntent);
+                for (int j = ColorItems.getSavedColorItems(MainActivity.this).size(); j > 0; j--) {
+                    ColorItems.deleteColorItem(MainActivity.this, ColorItems.getSavedColorItems(MainActivity.this).get(j - 1));
+                }
+                Intent intent2 = getIntent();
+                finish();
+                startActivity(intent2);
                 break;
 
             default:
@@ -222,7 +241,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.activity_main_fab:
                 if (mCurrentPageId == PAGE_ID_COLOR_ITEM_LIST) {
                     if (ColorItems.getSavedColorItems(this).size() >= 5) {
-                        new AlertDialog.Builder(MainActivity.this).setTitle("取色已完成").setMessage(R.string.activity_main_error_limit_detect).setPositiveButton("好", new DialogInterface.OnClickListener() {
+                        new AlertDialog.Builder(MainActivity.this).setTitle(R.string.picker_finish_title).setMessage(R.string.activity_main_error_limit_detect).setPositiveButton("好", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                             }
@@ -232,25 +251,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         startActivity(intentColorPickerActivity);
                     }
                 } else if (mCurrentPageId == PAGE_ID_PALETTE_LIST) {
-                    new AlertDialog.Builder(MainActivity.this).setTitle(R.string.confirm_operation).setMessage(R.string.confirm_delete_operation).setPositiveButton("删除", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            for (int j = ColorItems.getSavedColorItems(MainActivity.this).size(); j > 0; j--) {
-                                ColorItems.deleteColorItem(MainActivity.this, ColorItems.getSavedColorItems(MainActivity.this).get(j - 1));
-                            }
-                            Intent intent = getIntent();
-                            finish();
-                            startActivity(intent);
-                        }
-                    }).setOnCancelListener(new DialogInterface.OnCancelListener() {
-                        @Override
-                        public void onCancel(DialogInterface dialogInterface) {
-                            Intent intent = getIntent();
-                            finish();
-                            startActivity(intent);
-                        }
-                    }).show();
-                    /*
                     // Check if there is at least two color items.
                     // Creating a color palette with 1 or 0 colors make no sense.
                     if (ColorItems.getSavedColorItems(this).size() <= 1) {
@@ -260,7 +260,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         final Intent intentColorPaletteActivity = new Intent(this, PaletteCreationActivity.class);
                         startActivity(intentColorPaletteActivity);
                     }
-                    */
                 }
                 break;
 

@@ -59,7 +59,7 @@ public class FlavorColorItemListWrapper extends ColorItemListWrapper implements 
 
     @Override
     public void onColorItemLongClicked(@NonNull ColorItem colorItem) {
-        ClipDatas.clipPainText(mContext, mClipColorItemLabel, colorItem.getHexString(false));
+        ClipDatas.clipPainText(mContext, mClipColorItemLabel, colorItem.getHexString());
         showToast(R.string.color_clip_success_copy_message);
     }
 

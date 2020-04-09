@@ -3,6 +3,7 @@ package fr.tvbarthel.apps.cameracolorpicker.activities;
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -12,7 +13,6 @@ import android.hardware.Camera;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Gravity;
@@ -24,7 +24,6 @@ import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
 import android.widget.FrameLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import fr.tvbarthel.apps.cameracolorpicker.R;
 import fr.tvbarthel.apps.cameracolorpicker.data.ColorItem;
@@ -319,34 +318,11 @@ class ColorPickerBaseActivity extends AppCompatActivity
                 return;
             }
             if (ColorItems.getSavedColorItems(this).size() >= 5) {
-                new AlertDialog.Builder(ColorPickerBaseActivity.this).setTitle("录入结束").setMessage(R.string.activity_main_error_limit_detect).setPositiveButton("好", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        setSaveCompleted(true);
-                        Intent returnIntent = new Intent();
-                        returnIntent.putExtra(OI_COLOR_DATA, mLastPickedColor);
-                        setResult(RESULT_OK, returnIntent);
-                        finish();
-                    }
-                }).setOnDismissListener(new DialogInterface.OnDismissListener() {
-                    @Override
-                    public void onDismiss(DialogInterface dialogInterface) {
-                        setSaveCompleted(true);
-                        Intent returnIntent = new Intent();
-                        returnIntent.putExtra(OI_COLOR_DATA, mLastPickedColor);
-                        setResult(RESULT_OK, returnIntent);
-                        finish();
-                    }
-                }).setOnCancelListener(new DialogInterface.OnCancelListener() {
-                    @Override
-                    public void onCancel(DialogInterface dialogInterface) {
-                        setSaveCompleted(true);
-                        Intent returnIntent = new Intent();
-                        returnIntent.putExtra(OI_COLOR_DATA, mLastPickedColor);
-                        setResult(RESULT_OK, returnIntent);
-                        finish();
-                    }
-                }).show();
+                setSaveCompleted(true);
+                Intent returnIntent = new Intent();
+                returnIntent.putExtra(OI_COLOR_DATA, mLastPickedColor);
+                setResult(RESULT_OK, returnIntent);
+                finish();
             } else {
                 ColorItems.saveColorItem(this, new ColorItem(mLastPickedColor));
                 setSaveCompleted(true);
@@ -506,7 +482,7 @@ class ColorPickerBaseActivity extends AppCompatActivity
             mCamera.startPreview();
 
             mIsFlashOn = !mIsFlashOn;
-            //invalidateOptionsMenu();
+            invalidateOptionsMenu();
         }
     }
 

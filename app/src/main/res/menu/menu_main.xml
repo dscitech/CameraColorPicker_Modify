@@ -4,21 +4,16 @@
     tools:context=".MainActivity">
 
     <item
-        android:id="@+id/menu_main_action_contact_us"
-        android:orderInCategory="50"
-        android:title="@string/menu_main_action_contact_us"
-        app:showAsAction="never" />
-
-    <item
         android:id="@+id/menu_main_action_licenses"
-        android:orderInCategory="100"
-        android:title="@string/menu_main_action_licenses"
-        app:showAsAction="never" />
-
+        android:orderInCategory="101"
+        android:title="@string/menu_main_action_licenses" />
+    <item
+        android:id="@+id/menu_main_action_contact_us"
+        android:orderInCategory="103"
+        android:title="@string/menu_main_action_contact_us" />
     <item
         android:id="@+id/menu_main_action_about"
-        android:orderInCategory="200"
-        android:title="@string/menu_main_action_about"
-        app:showAsAction="never" />
+        android:orderInCategory="102"
+        android:title="@string/menu_main_action_about" />
 
 </menu>

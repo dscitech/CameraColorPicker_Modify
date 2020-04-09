@@ -129,9 +129,9 @@ public class ColorItem implements Parcelable {
      *
      * @return a human readable representation of the hexadecimal value.
      */
-    public String getHexString(boolean flag) {
+    public String getHexString() {
         if (mHexString == null) {
-            mHexString = flag ? makeHexString(mColor) + "（基准色）" : makeHexString(mColor) + "（样本色）";
+            mHexString = makeHexString(mColor);
         }
         return mHexString;
     }

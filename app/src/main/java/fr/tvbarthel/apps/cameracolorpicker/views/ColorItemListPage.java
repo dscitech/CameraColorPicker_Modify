@@ -141,9 +141,6 @@ public class ColorItemListPage extends FrameLayout implements ColorItemListWrapp
 
         colorJustAdded = new ArrayList<>();
         currentColors = ColorItems.getSavedColorItems(context);
-        if (currentColors.size() > 0) {
-            System.out.println("输出" + currentColors.get(currentColors.size() - 1).getHexString(true));
-        }
         mColorItemListWrapper.setItems(currentColors);
         mOnColorItemChangeListener = new ColorItems.OnColorItemChangeListener() {
             @Override

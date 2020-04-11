@@ -7,6 +7,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.IntDef;
@@ -17,6 +18,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,10 +32,14 @@ import com.melnykov.fab.FloatingActionButton;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 import cameracolorpicker.flavors.MainActivityFlavor;
 import fr.tvbarthel.apps.cameracolorpicker.R;
 import fr.tvbarthel.apps.cameracolorpicker.adapters.MainPagerAdapter;
+import fr.tvbarthel.apps.cameracolorpicker.data.ColorItem;
 import fr.tvbarthel.apps.cameracolorpicker.data.ColorItems;
 import fr.tvbarthel.apps.cameracolorpicker.fragments.AboutDialogFragment;
 import fr.tvbarthel.apps.cameracolorpicker.views.ColorItemListPage;
@@ -202,6 +208,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         String inputName = inputServer.getText().toString();
                         FileSystemController fileSystemController = new FileSystemController();
                         fileSystemController.openFileByWrite(MainActivity.this.getFilesDir() + "/common.txt", inputName);
+                        String s = fileSystemController.openFileByRead(MainActivity.this.getFilesDir() + "/common.txt");
+                        Log.e("jishu", s);
                         showToast(R.string.operation_successfully);
                     }
                 });
@@ -210,7 +218,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             case R.id.menu_main_action_about:
                 handled = true;
-                AboutDialogFragment.newInstance().show(getSupportFragmentManager(), null);
+                ArrayList<String> colors = new ArrayList<>();
+                FileSystemController fileSystemController = new FileSystemController();
+
+                String s = fileSystemController.openFileByRead(MainActivity.this.getFilesDir() + "/common.txt");
+
+                List<ColorItem> currentColors = ColorItems.getSavedColorItems(this);
+                for (int i = 0; i < currentColors.size(); i++) {
+                    String totlValue = getTotlValue(currentColors.get(i).getColor(), currentColors.get(0).getColor());
+                    colors.add(totlValue);
+                }
+                AboutDialogFragment.newInstance(colors, s).show(getSupportFragmentManager(), null);
                 break;
 
             case R.id.menu_main_action_contact_us:
@@ -233,6 +251,62 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return handled;
     }
 
+    /**
+     * 获取计算结果
+     *
+     * @param sample 样本颜色值
+     * @param base   基准颜色值
+     * @return
+     */
+    public String getTotlValue(int sample, int base) {
+        double sampleValue = 0.3 * getRed(sample) + 0.59 * getGreen(sample) + 0.11 * getBlue(sample);
+        double baseValue = 0.3 * getRed(base) + 0.59 * getGreen(base) + 0.11 * getBlue(base);
+
+        DecimalFormat df = new DecimalFormat("#.00");//保留两位小数
+
+        return df.format(sampleValue / baseValue * Integer.parseInt(getBaseValue()));
+    }
+
+    /**
+     * 获取设置的基准值
+     * @return
+     */
+    public String getBaseValue(){
+        FileSystemController fileSystemController = new FileSystemController();
+        String s = fileSystemController.openFileByRead(MainActivity.this.getFilesDir() + "/common.txt");
+        return s;
+    }
+
+    /**
+     * 获取颜色R值
+     *
+     * @param value
+     * @return
+     */
+    public int getRed(int value) {
+        return Color.red(value);
+    }
+
+    /**
+     * 获取颜色R值
+     *
+     * @param value
+     * @return
+     */
+    public int getGreen(int value) {
+        return Color.green(value);
+    }
+
+    /**
+     * 获取颜色B值
+     *
+     * @param value
+     * @return
+     */
+    public int getBlue(int value) {
+        return Color.blue(value);
+    }
+
     @Override
     public void onClick(View v) {
         final int viewId = v.getId();
@@ -240,16 +314,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (viewId) {
             case R.id.activity_main_fab:
                 if (mCurrentPageId == PAGE_ID_COLOR_ITEM_LIST) {
-                    if (ColorItems.getSavedColorItems(this).size() >= 5) {
+                 /*   if (ColorItems.getSavedColorItems(this).size() >= 5) {
                         new AlertDialog.Builder(MainActivity.this).setTitle(R.string.picker_finish_title).setMessage(R.string.activity_main_error_limit_detect).setPositiveButton("好", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                             }
                         }).show();
                     } else {
-                        final Intent intentColorPickerActivity = new Intent(this, ColorPickerActivity.class);
-                        startActivity(intentColorPickerActivity);
-                    }
+
+                    }*/
+                    final Intent intentColorPickerActivity = new Intent(this, ColorPickerActivity.class);
+                    startActivity(intentColorPickerActivity);
                 } else if (mCurrentPageId == PAGE_ID_PALETTE_LIST) {
                     // Check if there is at least two color items.
                     // Creating a color palette with 1 or 0 colors make no sense.

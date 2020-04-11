@@ -63,7 +63,7 @@
     <string name="color_clip_color_label_hsv">Color item HSV value.</string>
 
     <!-- View color item list page -->
-    <string name="view_color_item_list_page_empty_view">You have no colors :(\n\nCapture a color with the button on the bottom right.</string>
+    <string name="view_color_item_list_page_empty_view">使用说明：使用取色按钮取色，默认第一次取色色值为基准色，其余为样本色，请在右上角菜单录入基准值，完成取色后点击绘制曲线。</string>
 
     <!-- View palette list page -->
     <string name="view_palette_list_page_empty_view">You have no palettes :(\n\nCreate a palette with the button on the bottom right.</string>
